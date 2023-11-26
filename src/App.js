@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import app from "./firebase.init";
+import { getAuth } from "firebase/auth";
+import Navbar from "./Pages/Shared/Navbar";
+import Login from "./Pages/Login/Login";
+import { Route, Routes } from "react-router-dom";
+import SignUp from "./Pages/Login/SignUp";
+import Products from "./Pages/Products/Products";
+
 
 function App() {
+  useEffect(() => {
+
+  })
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="text-2xl text-center">
+      <Navbar></Navbar>
+      <Routes>
+        <Route path="/" element={<Products />}></Route>
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<SignUp />}></Route>
+      </Routes>
     </div>
   );
 }
