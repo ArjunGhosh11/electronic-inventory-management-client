@@ -33,7 +33,6 @@ const Login = () => {
 
     return (
         <div>
-            <h1 className='text-center text-secondary text-3xl font-extrabold outline-dotted'>TechDown</h1>
             <div className='flex justify-center items-center h-screen'>
 
                 <div className="card w-96 bg-base-100 shadow-xl">

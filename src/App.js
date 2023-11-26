@@ -6,6 +6,7 @@ import Login from "./Pages/Login/Login";
 import { Route, Routes } from "react-router-dom";
 import SignUp from "./Pages/Login/SignUp";
 import Products from "./Pages/Products/Products";
+import RequireAuth from "./Pages/Login/RequireAuth";
 
 
 function App() {
@@ -16,7 +17,16 @@ function App() {
     <div className="text-2xl text-center">
       <Navbar></Navbar>
       <Routes>
-        <Route path="/" element={<Products />}></Route>
+        <Route path="/" element={
+          <RequireAuth>
+            <Products />
+          </RequireAuth>
+        }></Route>
+        <Route path="/products" element={
+          <RequireAuth>
+            <Products />
+          </RequireAuth>
+        }></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
       </Routes>
