@@ -1,10 +1,12 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import Loading from '../Shared/Loading';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const Login = () => {
+    const [user1] = useAuthState(auth);
+    const navigate = useNavigate()
     const [
         signInWithEmailAndPassword,
         user,
@@ -12,8 +14,8 @@ const Login = () => {
         error,
     ] = useSignInWithEmailAndPassword(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
-    if (user) {
-        console.log(user);
+    if (user1) {
+        navigate("/products");
     }
     let signInError;
     if (error) {
