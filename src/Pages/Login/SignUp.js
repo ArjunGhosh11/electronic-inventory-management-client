@@ -70,7 +70,7 @@ const SignUp = () => {
                                 })}
                             />
                             <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.name.message}</span>}
+                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.name?.message}</span>}
                             </label>
                         </div>
                         <div className="form-control w-full max-w-xs">
@@ -89,7 +89,7 @@ const SignUp = () => {
                                 })}
                             />
                             <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.phone.message}</span>}
+                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.phone?.message}</span>}
                             </label>
                         </div>
                         <div className="form-control w-full max-w-xs">
@@ -108,7 +108,7 @@ const SignUp = () => {
                                 })}
                             />
                             <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.address.message}</span>}
+                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.address?.message}</span>}
                             </label>
                         </div>
 
@@ -132,8 +132,8 @@ const SignUp = () => {
                                 })}
                             />
                             <label className="label">
-                                {errors.email?.type === 'required' && <span className="label-text-alt text-red-500">{errors.email.message}</span>}
-                                {errors.email?.type === 'pattern' && <span className="label-text-alt text-red-500">{errors.email.message}</span>}
+                                {errors.email?.type === 'required' && <span className="label-text-alt text-red-500">{errors.email?.message}</span>}
+                                {errors.email?.type === 'pattern' && <span className="label-text-alt text-red-500">{errors.email?.message}</span>}
                             </label>
                         </div>
                         <div className="form-control w-full max-w-xs">
@@ -156,8 +156,8 @@ const SignUp = () => {
                                 })}
                             />
                             <label className="label">
-                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
-                                {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
+                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.password?.message}</span>}
+                                {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.password?.message}</span>}
                             </label>
                         </div>
                         <div className="form-control w-full max-w-xs">
@@ -166,16 +166,13 @@ const SignUp = () => {
                             </label>
                             <select defaultValue='client' className="select select-bordered"
                                 {...register("role", {
-                                    required: {
-                                        value: true,
-                                        message: 'Address is Required'
-                                    }
+
                                 })}>
                                 <option value='client'>Client</option>
                                 <option value='employee'>Employee</option>
                             </select>
                             <label className="label">
-                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.role.message}</span>}
+                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.role?.message}</span>}
                             </label>
                         </div>
 

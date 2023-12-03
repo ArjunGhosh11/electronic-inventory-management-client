@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const ProductTable = ({ products }) => {
+const ProductTable = ({ products, userType }) => {
     let i = 1;
     return (
         <div className='m-10'>
@@ -22,7 +23,7 @@ const ProductTable = ({ products }) => {
                     <tbody>
                         {
                             products.map(product =>
-                                <tr>
+                                <tr key={product.product_id}>
                                     <th>{i++}</th>
                                     <td>{product.product_id}</td>
                                     <td>{product.brand}</td>
@@ -30,7 +31,9 @@ const ProductTable = ({ products }) => {
                                     <td>{product.type}</td>
                                     <td>{product.quantity}</td>
                                     <td>{product.unit_price}</td>
-                                    <td><button className='btn btn-outline btn-secondary p-2 py-2'>Edit</button></td>
+                                    <td>{userType === 'admin' || userType === 'employee' ? <button className='btn btn-outline btn-secondary p-2 py-2'>Edit</button> : <Link to={'/products/' + product.product_id}>
+                                        <button className='btn btn-outline btn-secondary p-2 py-2'>Buy Now</button>
+                                    </Link>}</td>
 
                                 </tr>
                             )
