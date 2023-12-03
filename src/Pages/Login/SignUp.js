@@ -89,7 +89,7 @@ const SignUp = () => {
                                 })}
                             />
                             <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.phone?.message}</span>}
+                                {errors.phone?.type === 'required' && <span className="label-text-alt text-red-500">{errors.phone?.message}</span>}
                             </label>
                         </div>
                         <div className="form-control w-full max-w-xs">
@@ -108,7 +108,7 @@ const SignUp = () => {
                                 })}
                             />
                             <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.address?.message}</span>}
+                                {errors.address?.type === 'required' && <span className="label-text-alt text-red-500">{errors.address?.message}</span>}
                             </label>
                         </div>
 
@@ -172,7 +172,7 @@ const SignUp = () => {
                                 <option value='employee'>Employee</option>
                             </select>
                             <label className="label">
-                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.role?.message}</span>}
+                                {errors.role?.type === 'required' && <span className="label-text-alt text-red-500">{errors.role?.message}</span>}
                             </label>
                         </div>
 

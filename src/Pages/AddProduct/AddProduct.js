@@ -3,20 +3,39 @@ import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useProductIdGenerator from '../../Hooks/useProductIdGenerator';
+import { toast } from 'react-toastify';
 const SignUp = () => {
     const navigate = useNavigate();
-    const { register, formState: { errors }, handleSubmit } = useForm();
-
-
-    const onSubmit = async data => {
-
-        console.log(data)
-        // axios.post("http://localhost:8081/product", data)
-        //     .then(res => console.log(res))
-        //     .catch(err => console.log(err))
+    const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm();
+    const [id] = useProductIdGenerator();
+    if (!id) {
+        return <Loading></Loading>
     }
+
+    const onSubmit = data => {
+        console.log(data)
+        axios.post("http://localhost:8081/products", data)
+            .then(res => {
+                if (res.data.success) {
+                    toast("Product is added.")
+                }
+            }
+            )
+            .catch(err => {
+                toast.error("Please Retry!")
+            })
+        axios.put('http://localhost:8081/idProducer/product', data)
+            .then(res => {
+                console.log(res)
+            }).catch(err => console.log(err));
+        reset()
+    }
+    setValue("id", `P-${id + 1}`);
+    setValue("id_no", id + 1);
+    console.log(id);
     return (
-        <div className='flex h-screen justify-center items-center my-10'>
+        <div className='flex h-screen justify-center items-center '>
             <div className="card w-96 bg-base-100 shadow-xl">
                 <div className="card-body">
                     <h2 className="text-center text-2xl font-bold">ADD A PRODUCT</h2>
@@ -24,130 +43,115 @@ const SignUp = () => {
 
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
-                                <span className="label-text">Name</span>
+                                <span className="label-text">Brand</span>
                             </label>
                             <input
                                 type="text"
-                                placeholder="Your Name"
+                                placeholder="Product Brand"
                                 className="input input-bordered w-full max-w-xs"
-                                {...register("name", {
+                                {...register("brand", {
                                     required: {
                                         value: true,
-                                        message: 'Name is Required'
+                                        message: 'Brand is Required'
                                     }
                                 })}
                             />
                             <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.name.message}</span>}
+                                {errors.brand?.type === 'required' && <span className="label-text-alt text-red-500">{errors.brand?.message}</span>}
                             </label>
                         </div>
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
-                                <span className="label-text">Phone Number</span>
+                                <span className="label-text">Model</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Product Model"
+                                className="input input-bordered w-full max-w-xs"
+                                {...register("model", {
+                                    required: {
+                                        value: true,
+                                        message: 'Model is Required'
+                                    }
+                                })}
+                            />
+                            <label className="label">
+                                {errors.model?.type === 'required' && <span className="label-text-alt text-red-500">{errors.model?.message}</span>}
+                            </label>
+                        </div>
+                        <div className="form-control w-full max-w-xs">
+                            <label className="label">
+                                <span className="label-text">Quantity</span>
                             </label>
                             <input
                                 type="number"
-                                placeholder="Your Phone Number"
+                                placeholder="Product Quantity"
                                 className="input input-bordered w-full max-w-xs"
-                                {...register("phone", {
+                                {...register("quantity", {
                                     required: {
-                                        value: true,
-                                        message: 'Phone Number is Required'
+                                        value: /\d{2,}|\d{3,}|\d{4,}|\d{5,}|\d{6,}/,
+                                        message: 'Valid Quantity is Required'
                                     }
                                 })}
                             />
                             <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.phone.message}</span>}
-                            </label>
-                        </div>
-                        <div className="form-control w-full max-w-xs">
-                            <label className="label">
-                                <span className="label-text">Address</span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Your Address"
-                                className="input input-bordered w-full max-w-xs"
-                                {...register("address", {
-                                    required: {
-                                        value: true,
-                                        message: 'Address is Required'
-                                    }
-                                })}
-                            />
-                            <label className="label">
-                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.address.message}</span>}
+                                {errors.quantity?.type === 'required' && <span className="label-text-alt text-red-500">{errors.quantity?.message}</span>}
                             </label>
                         </div>
 
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
-                                <span className="label-text">Email</span>
+                                <span className="label-text">Unit Price</span>
                             </label>
                             <input
-                                type="email"
-                                placeholder="Your Email"
+                                type="number"
+                                placeholder="Unit Price"
                                 className="input input-bordered w-full max-w-xs"
-                                {...register("email", {
+                                {...register("unit_price", {
                                     required: {
                                         value: true,
                                         message: 'Email is Required'
                                     },
                                     pattern: {
-                                        value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-                                        message: 'Provide a valid Email'
+                                        value: /\d{2,}|\d{3,}/,
+                                        message: 'Provide a valid Unit Price'
                                     }
                                 })}
                             />
                             <label className="label">
-                                {errors.email?.type === 'required' && <span className="label-text-alt text-red-500">{errors.email.message}</span>}
-                                {errors.email?.type === 'pattern' && <span className="label-text-alt text-red-500">{errors.email.message}</span>}
+                                {errors.unit_price?.type === 'required' && <span className="label-text-alt text-red-500">{errors.unit_price?.message}</span>}
+                                {errors.unit_price?.type === 'pattern' && <span className="label-text-alt text-red-500">{errors.unit_price?.message}</span>}
                             </label>
                         </div>
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
-                                <span className="label-text">Password</span>
+                                <span className="label-text">Product Type</span>
                             </label>
-                            <input
-                                type="current-password"
-                                placeholder="Password"
-                                className="input input-bordered w-full max-w-xs"
-                                {...register("password", {
+                            <select defaultValue='laptop' className="select select-bordered"
+                                {...register("type", {
                                     required: {
                                         value: true,
-                                        message: 'Password is Required'
-                                    },
-                                    minLength: {
-                                        value: 6,
-                                        message: 'Must be 6 characters or longer'
-                                    }
-                                })}
-                            />
-                            <label className="label">
-                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
-                                {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
-                            </label>
-                        </div>
-                        <div className="form-control w-full max-w-xs">
-                            <label className="label">
-                                <span className="label-text">Role</span>
-                            </label>
-                            <select defaultValue='client' className="select select-bordered"
-                                {...register("role", {
-                                    required: {
-                                        value: true,
-                                        message: 'Address is Required'
+                                        message: 'Type is Required'
                                     }
                                 })}>
-                                <option value='client'>Client</option>
-                                <option value='employee'>Employee</option>
+                                <option value='laptop'>Laptop</option>
+                                <option value='phone'>Phone</option>
+                                <option value='cpu'>CPU</option>
+                                <option value='gpu'>GPU</option>
+                                <option value='charging_device'>Charging Device</option>
+                                <option value='headset'>Head Set</option>
+                                <option value='speaker'>Speaker</option>
+                                <option value='earphone'>Earphones</option>
+                                <option value='keyboard'>Key Board</option>
+                                <option value='monitor'>Monitor</option>
+                                <option value='mouse'>Mouse</option>
                             </select>
                             <label className="label">
-                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.role.message}</span>}
+                                {errors.type?.type === 'required' && <span className="label-text-alt text-red-500">{errors.type?.message}</span>}
                             </label>
                         </div>
+                        <input className='btn w-full max-w-xs text-white' type="submit" value="SUBMIT" />
                     </form>
-                    <small className='text-sm font-semibold'>Already have an account?  <span className='text-primary ml-2'><Link to='/login'>Sign In</Link></span></small>
                 </div>
             </div>
         </div >

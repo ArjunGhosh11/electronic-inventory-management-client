@@ -28,10 +28,10 @@ const ProductTable = ({ products, userType }) => {
                                     <td>{product.product_id}</td>
                                     <td>{product.brand}</td>
                                     <td>{product.model}</td>
-                                    <td>{product.type}</td>
+                                    <td>{product.type.toUpperCase()}</td>
                                     <td>{product.quantity}</td>
                                     <td>{product.unit_price}</td>
-                                    <td>{userType === 'admin' || userType === 'employee' ? <button className='btn btn-outline btn-secondary p-2 py-2'>Edit</button> : <Link to={'/products/' + product.product_id}>
+                                    <td>{userType === 'admin' || userType === 'employee' ? <Link to={'/products/inventory/' + product.product_id}><button className='btn btn-outline btn-secondary p-2 py-2'>Edit</button> </Link> : <Link to={'/products/' + product.product_id}>
                                         <button className='btn btn-outline btn-secondary p-2 py-2'>Buy Now</button>
                                     </Link>}</td>
 

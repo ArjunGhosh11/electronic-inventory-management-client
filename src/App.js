@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import app from "./firebase.init";
 import { getAuth } from "firebase/auth";
 import Navbar from "./Pages/Shared/Navbar";
@@ -9,6 +11,9 @@ import Products from "./Pages/Products/Products";
 import RequireAuth from "./Pages/Login/RequireAuth";
 import AddProduct from "./Pages/AddProduct/AddProduct";
 import Product from "./Pages/Products/Product";
+import Inventory from "./Pages/Products/Inventory";
+import MyDashboard from "./Pages/MyDashboard/MyDashboard";
+import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 
 
 function App() {
@@ -34,14 +39,30 @@ function App() {
             <Product />
           </RequireAuth>
         }></Route>
+        <Route path="/products/inventory/:id" element={
+          <RequireAuth>
+            <Inventory />
+          </RequireAuth>
+        }></Route>
         <Route path="/addProduct" element={
           <RequireAuth>
             <AddProduct />
           </RequireAuth>
         }></Route>
+        <Route path="/myDashboard" element={
+          <RequireAuth>
+            <MyDashboard />
+          </RequireAuth>
+        }></Route>
+        <Route path="/adminDashboard" element={
+          <RequireAuth>
+            <AdminDashboard />
+          </RequireAuth>
+        }></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
       </Routes>
+      <ToastContainer></ToastContainer>
     </div>
   );
 }

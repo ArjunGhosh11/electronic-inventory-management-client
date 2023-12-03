@@ -7,7 +7,7 @@ const useProductIdGenerator = () => {
             .then(res => setIdInfo(res.data))
             .catch(err => console.log(err));
     }, []);
-    return [idInfo[1]?.no_of_items];
+    return [idInfo[0]?.no_of_items];
 };
 
 export default useProductIdGenerator;
