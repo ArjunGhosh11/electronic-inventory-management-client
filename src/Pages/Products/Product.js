@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Loading from './../Shared/Loading'
+import Review from './Review';
 const Product = () => {
     const { id } = useParams()
     const [product, setProduct] = useState()
@@ -14,11 +15,8 @@ const Product = () => {
             .then(res => setProductSpecs(res.data))
             .catch(err => console.log(err));
     }, [id]);
-    // console.log(product);
-    // console.log(productSpecs)
     const [amount, setAmount] = useState(0)
     const [noOfItems, setNoOfItems] = useState(10)
-    // setAmount(parseInt(product?.unit_price) * noOfItems);
     if (!product || !productSpecs) {
         return <Loading></Loading>
     }
@@ -37,6 +35,7 @@ const Product = () => {
             setAmount(noOfItems * unit_price)
         }
     }
+
     return (
         <div>
             <section className='my-10 lg:px-60 md:px-20 sm:px-20 flex justify-between shadow-2xl mx-5 py-5'>
@@ -81,9 +80,7 @@ const Product = () => {
                     )
                 }
             </section>
-            <section className='my-10 lg:px-60 md:px-20 sm:px-20  text-left shadow-2xl mx-5 py-5'>
-                <h1 className='font-bold text-xl text-primary'>ADD A REVIEW</h1>
-            </section>
+            <Review id={id}></Review>
         </div>
     );
 };

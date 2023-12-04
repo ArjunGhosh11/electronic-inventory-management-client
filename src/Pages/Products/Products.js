@@ -9,7 +9,6 @@ import useUserType from '../../Hooks/useUserType';
 const Products = () => {
     const [user, loading] = useAuthState(auth);
     const [userType, loadingType] = useUserType(user);
-    console.log(userType);
     const [products, setProducts] = useState([]);
     useEffect(() => {
         axios.get('http://localhost:8081/products')

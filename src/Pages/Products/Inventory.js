@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Loading from '../Shared/Loading';
 import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
 
 const Inventory = () => {
     const { id } = useParams();
@@ -10,6 +11,8 @@ const Inventory = () => {
     const [productSpecs, setProductSpecs] = useState();
     const [noOfItems, setNoOfItems] = useState(10);
     const [quantityUpdated, setQuantityUpdated] = useState(false);
+    const [specificationsAdded, setSpecificationsAdded] = useState(0);
+    const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm();
     useEffect(() => {
         axios.get(`http://localhost:8081/product/${id}`)
             .then(res => setProduct(res.data[0]))
@@ -17,7 +20,7 @@ const Inventory = () => {
         axios.get(`http://localhost:8081/product/specs/${id}`)
             .then(res => setProductSpecs(res.data))
             .catch(err => console.log(err));
-    }, [quantityUpdated, id]);
+    }, [quantityUpdated, id, specificationsAdded]);
     const handleAddItem = (noOfItems, setNoOfItems) => {
         const newNoOfItems = noOfItems + 10;
         setNoOfItems(newNoOfItems);
@@ -31,9 +34,25 @@ const Inventory = () => {
     if (!product || !productSpecs) {
         return <Loading></Loading>
     }
+    const onSubmit = data => {
+        axios.post("http://localhost:8081/product/specs", { product_id: id, specifications: data.specifications })
+            .then(res => {
+                if (res.data.success) {
+                    setSpecificationsAdded(specificationsAdded + 1);
+
+                }
+                else {
+                    console.log(res);
+                }
+            }
+            )
+            .catch(err => {
+                console.log(err)
+            })
+        reset();
+    }
     const sendToServer = (id, quantity, setQuantityUpdated) => {
-        const data = { id, quantity }
-        console.log(data)
+        const data = { id, quantity };
         axios.put(`http://localhost:8081/products/inventory/${id}`, data)
             .then(res => {
                 if (res.data.success) {
@@ -107,6 +126,37 @@ const Inventory = () => {
             </section>
             <section className='my-10 lg:px-60 md:px-20 sm:px-20  text-left shadow-2xl mx-5 py-5'>
                 <h1 className='font-bold text-xl text-primary'>ADD SPECIFICATIONS</h1>
+                <div className='flex  items-center'>
+
+                    <div className="w-96 bg-base-100">
+                        <div className="card-body">
+
+                            <form className='' onSubmit={handleSubmit(onSubmit)}>
+                                <div className="form-control w-full max-w-xs">
+                                    <label className="label">
+                                        <span className="label-text">Specification</span>
+                                    </label>
+                                    <input {...register("specifications", {
+                                        required: {
+                                            value: true,
+                                            message: 'Specification is Required'
+                                        }
+                                    })}
+                                        type="text" placeholder="Type here"
+                                        className="input input-bordered w-full max-w-xs"
+                                    />
+                                    <label className="label">
+                                        {errors.specifications?.type === 'required' && <span className="label-text-alt text-red-500">{errors.specifications?.message}</span>}
+                                    </label>
+                                </div>
+
+                                <button className="btn btn-outline btn-primary w-full max-w-xs">
+                                    <input type="submit" className='' value='ADD' />
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     );
