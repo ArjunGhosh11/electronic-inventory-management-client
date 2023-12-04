@@ -81,6 +81,9 @@ const Product = () => {
                     )
                 }
             </section>
+            <section className='my-10 lg:px-60 md:px-20 sm:px-20  text-left shadow-2xl mx-5 py-5'>
+                <h1 className='font-bold text-xl text-primary'>ADD A REVIEW</h1>
+            </section>
         </div>
     );
 };

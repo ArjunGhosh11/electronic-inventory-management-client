@@ -1,12 +1,10 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useProductIdGenerator from '../../Hooks/useProductIdGenerator';
 import { toast } from 'react-toastify';
 const SignUp = () => {
-    const navigate = useNavigate();
     const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm();
     const [id] = useProductIdGenerator();
     if (!id) {
@@ -14,7 +12,6 @@ const SignUp = () => {
     }
 
     const onSubmit = data => {
-        console.log(data)
         axios.post("http://localhost:8081/products", data)
             .then(res => {
                 if (res.data.success) {
@@ -33,7 +30,6 @@ const SignUp = () => {
     }
     setValue("id", `P-${id + 1}`);
     setValue("id_no", id + 1);
-    console.log(id);
     return (
         <div className='flex h-screen justify-center items-center '>
             <div className="card w-96 bg-base-100 shadow-xl">
