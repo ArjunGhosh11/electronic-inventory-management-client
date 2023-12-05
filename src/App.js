@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import app from "./firebase.init";
-import { getAuth } from "firebase/auth";
 import Navbar from "./Pages/Shared/Navbar";
 import Login from "./Pages/Login/Login";
 import { Route, Routes } from "react-router-dom";
@@ -55,7 +53,7 @@ function App() {
             <MyDashboard />
           </RequireAuth>
         }></Route>
-        <Route path="/myCart/:cart_id" element={
+        <Route path="/myCart/:user_id" element={
           <RequireAuth>
             <Cart />
           </RequireAuth>

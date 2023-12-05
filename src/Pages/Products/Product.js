@@ -19,7 +19,7 @@ const Product = () => {
     const [product, setProduct] = useState();
     const [productSpecs, setProductSpecs] = useState();
     const [userInfo] = useGetUserByEmail(user?.email);
-    const [orderCount] = useOrderCount(userInfo?.user_id);
+    const [orderCount] = useOrderCount(userInfo[0]?.user_id);
     useEffect(() => {
         axios.get(`http://localhost:8081/product/${id}`)
             .then(res => {

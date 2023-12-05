@@ -3,14 +3,16 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import CheckoutForm from './CheckoutForm';
+import useOrderCount from '../../Hooks/useOrderCount';
 
 const Cart = () => {
-    const { cart_id } = useParams();
+    const { user_id } = useParams();
+    const [orderCount] = useOrderCount(user_id);
+    const cart_id = "CART-" + user_id.substring(5) + '-' + orderCount?.orderCount;
     console.log(cart_id);
     const currentDate = new Date();
     // Formatting the date to match SQL's DATETIME format (YYYY-MM-DD HH:MM:SS)
     const formattedDateTime = currentDate.toISOString().slice(0, 19).replace('T', ' ');
-    const paymentStatus = 'unpaid';
     const [quantityUpdated, setQuantityUpdated] = useState(false);
     const [itemDeleted, setItemDeleted] = useState(0);
     const [cartItems, setCartItems] = useState([]);
