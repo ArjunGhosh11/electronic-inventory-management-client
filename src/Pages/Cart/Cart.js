@@ -5,6 +5,10 @@ import { toast } from 'react-toastify';
 
 const Cart = () => {
     const { cart_id } = useParams();
+    const currentDate = new Date();
+    // Formatting the date to match SQL's DATETIME format (YYYY-MM-DD HH:MM:SS)
+    const formattedDateTime = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    const paymentStatus = 'unpaid';
     const [quantityUpdated, setQuantityUpdated] = useState(false);
     const [itemDeleted, setItemDeleted] = useState(0);
     const [cartItems, setCartItems] = useState([]);
@@ -48,6 +52,8 @@ const Cart = () => {
                 }
             }).catch(err => console.log(err));
     }
+
+
 
     return (
         <div>
@@ -100,6 +106,9 @@ const Cart = () => {
                     </table>
                 </div>
             </div>
+            <section>
+
+            </section>
         </div>
     );
 };

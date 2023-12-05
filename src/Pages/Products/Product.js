@@ -9,8 +9,10 @@ import useGetUserByEmail from '../../Hooks/useGetUserByEmail';
 import useOrderCount from '../../Hooks/useOrderCount';
 import { toast } from 'react-toastify';
 const Product = () => {
-    const { id } = useParams()
-    const [error, setError] = useState(false);
+    const { id } = useParams();
+    const [noOfItems, setNoOfItems] = useState(10)
+    const [disabled, setDisabled] = useState(false);
+    const [error, setError] = useState("Items added to cart!");
     const [quantityUpdated, setQuantityUpdated] = useState(false);
     const [productSelected, setProductSelected] = useState(false);
     const [user, loading] = useAuthState(auth);
@@ -20,56 +22,58 @@ const Product = () => {
     const [orderCount] = useOrderCount(userInfo?.user_id);
     useEffect(() => {
         axios.get(`http://localhost:8081/product/${id}`)
-            .then(res => setProduct(res.data[0]))
+            .then(res => {
+                setProduct(res.data[0]);
+                if (res.data[0].quantity < 10) {
+                    setError("Product out of stock!");
+                    setDisabled(true)
+                }
+            })
             .catch(err => console.log(err));
         axios.get(`http://localhost:8081/product/specs/${id}`)
             .then(res => setProductSpecs(res.data))
             .catch(err => console.log(err));
     }, [id, quantityUpdated]);
-    const [amount, setAmount] = useState(0)
-    const [noOfItems, setNoOfItems] = useState(10)
     if (!product || !productSpecs || loading || !user) {
         return <Loading></Loading>
     }
-
     const handleAddItem = (noOfItems, setNoOfItems, quantity, unit_price) => {
         if (noOfItems < quantity) {
             const newNoOfItems = noOfItems + 10;
             setNoOfItems(newNoOfItems);
-            setAmount(noOfItems * unit_price)
         }
     }
     const handleReduceItem = (noOfItems, setNoOfItems, unit_price) => {
         if (noOfItems > 10) {
             const newNoOfItems = noOfItems - 10;
             setNoOfItems(newNoOfItems);
-            setAmount(noOfItems * unit_price)
         }
     }
-    const handleAddToCart = (user_id, quantity, noOfItems, orderCount, product_id, unit_price, setQuantityUpdated, setProductSelected) => {
+    const handleAddToCart = (user_id, quantity, noOfItems, orderCount, product_id, unit_price, productSelected, setQuantityUpdated, setProductSelected) => {
         const cart_id = "CART-" + user_id.substring(5) + "-" + orderCount;
         const data = { cart_id: cart_id, quantity: noOfItems, product_id, unit_price }
-        let error = false;
+        let addError = false;
         axios.post("http://localhost:8081/productSelected", data)
             .then(res => {
                 if (res.data.success) {
                     console.log(res)
-                    setProductSelected(true)
+                    setProductSelected(true);
+                    sendToServer(product_id, quantity - noOfItems, setQuantityUpdated);
                 }
                 else {
                     console.log(res);
-                    error = false;
-                    setError(true)
+                    setProductSelected(true);
                 }
             }
             )
             .catch(err => {
-                console.log(err)
+                console.log(err);
+                addError = true;
             });
-        if (error) {
-            sendToServer(product_id, quantity - noOfItems, setQuantityUpdated);
+        // if (!addError) {
+        //     sendToServer(product_id, quantity - noOfItems, setQuantityUpdated);
 
-        }
+        // }
     }
     const sendToServer = (id, quantity, setQuantityUpdated) => {
         const data = { id, quantity };
@@ -98,8 +102,8 @@ const Product = () => {
                     </div>
                 </div>
                 <div className='flex flex-col'>
-                    {(quantityUpdated & productSelected) || error ?
-                        <h1 className='text-accent text-lg'>Items Added To Cart!</h1>
+                    {(productSelected) || disabled ?
+                        <h1 className='text-accent text-lg'>{error}</h1>
                         :
                         <div className='text-right font-bold text-small'>
                             <h2 className='text-accent text-lg'>Amount: </h2>
@@ -119,7 +123,7 @@ const Product = () => {
                                 </button>
                             </h1>
                             <h2 className='text-accent text-lg'>= ${parseInt(product?.unit_price) * noOfItems}</h2>
-                            <button onClick={() => handleAddToCart(userInfo[0]?.user_id, product?.quantity, noOfItems, orderCount.orderCount, id, product?.unit_price, setQuantityUpdated, setProductSelected)} className='bg-slate-400 hover:bg-primary text-white  py-1 px-6 rounded  text-lg mt-5' >Add to cart</button>
+                            <button disabled={disabled} onClick={() => handleAddToCart(userInfo[0]?.user_id, product?.quantity, noOfItems, orderCount.orderCount, id, product?.unit_price, productSelected, setQuantityUpdated, setProductSelected)} className='bg-slate-400 hover:bg-primary text-white  py-1 px-6 rounded  text-lg mt-5' >Add to cart</button>
                         </div>
                     }
                 </div>
