@@ -7,7 +7,7 @@ const useOrderCount = (id) => {
         axios.get('http://localhost:8081/orderID/' + id)
             .then(res => setOrderCount(res.data))
             .catch(err => console.log(err));
-    }, []);
+    }, [id]);
     return orderCount;
 };
 

@@ -7,20 +7,17 @@ import useUserType from '../../Hooks/useUserType';
 import useGetUserByEmail from '../../Hooks/useGetUserByEmail';
 import useOrderCount from '../../Hooks/useOrderCount';
 const Navbar = () => {
-    // const [cart_id, setCart_id] = useState('')
     const [user] = useAuthState(auth);
     const [userType, userTypeLoading] = useUserType(user);
     const [userInfo] = useGetUserByEmail(user?.email);
     const [orderCount] = useOrderCount(userInfo?.userId);
     const cart_id = "CART-" + userInfo[0]?.user_id.substring(5) + '-' + orderCount?.orderCount;
-    // setCart_id(cart_id);
     const logout = () => {
         signOut(auth);
     };
     // if (userTypeLoading) {
     //     return <p>Loading</p>
     // }
-    console.log("cart_id-", cart_id);
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">

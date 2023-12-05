@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import CheckoutForm from './CheckoutForm';
 
 const Cart = () => {
     const { cart_id } = useParams();
+    console.log(cart_id);
     const currentDate = new Date();
     // Formatting the date to match SQL's DATETIME format (YYYY-MM-DD HH:MM:SS)
     const formattedDateTime = currentDate.toISOString().slice(0, 19).replace('T', ' ');
@@ -52,9 +54,6 @@ const Cart = () => {
                 }
             }).catch(err => console.log(err));
     }
-
-
-
     return (
         <div>
             <h1>CART</h1>
@@ -106,9 +105,7 @@ const Cart = () => {
                     </table>
                 </div>
             </div>
-            <section>
-
-            </section>
+            <CheckoutForm amount={totalAmount} dateTime={formattedDateTime} cart_id={cart_id}></CheckoutForm>
         </div>
     );
 };
