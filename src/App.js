@@ -14,6 +14,7 @@ import Product from "./Pages/Products/Product";
 import Inventory from "./Pages/Products/Inventory";
 import MyDashboard from "./Pages/MyDashboard/MyDashboard";
 import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
+import Cart from "./Pages/Cart/Cart";
 
 
 function App() {
@@ -52,6 +53,11 @@ function App() {
         <Route path="/myDashboard" element={
           <RequireAuth>
             <MyDashboard />
+          </RequireAuth>
+        }></Route>
+        <Route path="/myCart/:cart_id" element={
+          <RequireAuth>
+            <Cart />
           </RequireAuth>
         }></Route>
         <Route path="/adminDashboard" element={

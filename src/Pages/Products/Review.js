@@ -1,13 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
-import auth from '../../firebase.init';
-
-const Review = ({ id }) => {
+const Review = ({ id, user, loading }) => {
     const [reviews, setReviews] = useState([]);
-    const [user, loading] = useAuthState(auth);
-    const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm();
+    const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const [date, setDate] = useState(new Date());
     const [commentAdded, setCommentAdded] = useState(0)
     useEffect(() => {
