@@ -9,7 +9,6 @@ const Cart = () => {
     const { user_id } = useParams();
     const [orderCount] = useOrderCount(user_id);
     const cart_id = "CART-" + user_id.substring(5) + '-' + orderCount?.orderCount;
-    console.log(cart_id);
     const currentDate = new Date();
     // Formatting the date to match SQL's DATETIME format (YYYY-MM-DD HH:MM:SS)
     const formattedDateTime = currentDate.toISOString().slice(0, 19).replace('T', ' ');
@@ -31,7 +30,6 @@ const Cart = () => {
     }
 
     const totalAmount = getTotalAmount(cartItems);
-    console.log(totalAmount);
     const handleDeleteButton = (cart_id, product_id, quantity, setQuantityUpdated, setItemDeleted) => {
         axios.delete("http://localhost:8081/productSelected/", { data: { cart_id: cart_id, product_id: product_id } })
             .then(res => {

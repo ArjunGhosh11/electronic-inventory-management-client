@@ -33,7 +33,7 @@ const Navbar = () => {
                                             <li><Link to='/adminDashboard' >Admin Dashboard</Link></li>
                                         </div>
                                         :
-                                        <li><Link to='/myDashboard' >My Dashboard</Link></li>
+                                        <li><Link to={'/myDashboard/' + user_id} >My Dashboard</Link></li>
                                 }
                                 {/* <li>
                             <a>Parent</a>
