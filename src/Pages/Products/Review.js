@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 const Review = ({ id, user, loading }) => {
     const [reviews, setReviews] = useState([]);
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
@@ -17,6 +18,7 @@ const Review = ({ id, user, loading }) => {
             .then(res => {
                 if (res.data.success) {
                     setCommentAdded(commentAdded + 1);
+                    toast('Comment added!');
                 }
             }
             )

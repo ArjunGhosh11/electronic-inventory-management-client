@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { signOut } from 'firebase/auth';
 import auth from '../../firebase.init';
-import useUserType from '../../Hooks/useUserType';
-import useGetUserByEmail from '../../Hooks/useGetUserByEmail';
+import axios from 'axios';
+
 const Navbar = () => {
     const [user] = useAuthState(auth);
-    const [userType, userTypeLoading] = useUserType(user);
-    const [userInfo] = useGetUserByEmail(user?.email);
-    const user_id = userInfo[0]?.user_id;
+    const [userInfo, setUserInfo] = useState();
+    const [userId, setUserId] = useState('');
+    const [userType, setUserType] = useState('');
+    useEffect(() => {
+        if (user?.email) {
+            axios.get(`http://localhost:8081/users/${user?.email}`)
+                .then(res => {
+                    setUserInfo(res.data[0]);
+                    setUserId(res.data[0]?.user_id);
+                    setUserType(res.data[0]?.role);
+                })
+                .catch(err => console.log(err));
+
+        }
+    }, [user])
+    console.log(userInfo)
     const logout = () => {
         signOut(auth);
     };
+    // if (!user || !userId) {
+    //     return <p></p>
+    // }
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">
@@ -31,9 +47,16 @@ const Navbar = () => {
                                         <div>
                                             <li><Link to='/addProduct' >Add Product</Link></li>
                                             <li><Link to='/adminDashboard' >Admin Dashboard</Link></li>
+                                            <li><Link to='/allOrders' >All Orders</Link></li>
                                         </div>
                                         :
-                                        <li><Link to={'/myDashboard/' + user_id} >My Dashboard</Link></li>
+                                        userType === 'employee' ?
+                                            <div>
+                                                <li><Link to='/addProduct' >Add Product</Link></li>
+                                                <li><Link to='/allOrders' >All Orders</Link></li>
+                                            </div>
+                                            :
+                                            <li><Link to={'/myDashboard/' + userId} >My Dashboard</Link></li>
                                 }
                                 {/* <li>
                             <a>Parent</a>
@@ -59,9 +82,16 @@ const Navbar = () => {
                                     <div className='flex'>
                                         <li><Link to='/addProduct' >Add Product</Link></li>
                                         <li><Link to='/adminDashboard' >Admin Dashboard</Link></li>
+                                        <li><Link to='/allOrders' >All Orders</Link></li>
                                     </div>
                                     :
-                                    <li><Link to='/myDashboard' >My Dashboard</Link></li>
+                                    userType === 'employee' ?
+                                        <div className='flex'>
+                                            <li><Link to='/addProduct' >Add Product</Link></li>
+                                            <li><Link to='/allOrders' >All Orders</Link></li>
+                                        </div>
+                                        :
+                                        <li><Link to={'/myDashboard/' + userId} >My Dashboard</Link></li>
                             }
                             {/* <li tabIndex={0}>
                         <details>
@@ -80,7 +110,7 @@ const Navbar = () => {
                 {user ? <div className='flex align-middle justify-center items-center'>
                     {
                         userType === 'client' ?
-                            <Link to={"/myCart/" + user_id}><button>
+                            <Link to={"/myCart/" + userId}><button>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                     <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
                                 </svg>

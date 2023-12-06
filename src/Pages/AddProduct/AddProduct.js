@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import axios from 'axios';
-import useProductIdGenerator from '../../Hooks/useProductIdGenerator';
 import { toast } from 'react-toastify';
 const SignUp = () => {
     const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm();
-    const [id] = useProductIdGenerator();
-    if (!id) {
-        return <Loading></Loading>
-    }
-
+    const [id, setId] = useState([]);
+    useEffect(() => {
+        axios.get('http://localhost:8081/idProducer')
+            .then(res => setId(res.data[0]?.no_of_items))
+            .catch(err => console.log(err));
+    }, []);
     const onSubmit = data => {
-        axios.post("http://localhost:8081/products", data)
+        // setValue("id", `P-${id + 1}`);
+        // setValue("id_no", id + 1);
+        const product_id = "P-" + (id + 1);
+        const id_no = id + 1;
+        const productInfo = { brand: data.brand, id: product_id, model: data.model, quantity: data.quantity, unit_price: data.unit_price, type: data.type }
+        axios.post("http://localhost:8081/products", productInfo)
             .then(res => {
                 if (res.data.success) {
                     toast("Product is added.")
@@ -22,14 +27,13 @@ const SignUp = () => {
             .catch(err => {
                 toast.error("Please Retry!")
             })
-        axios.put('http://localhost:8081/idProducer/product', data)
+        axios.put('http://localhost:8081/idProducer/product', { id_no: id_no })
             .then(res => {
                 console.log(res)
             }).catch(err => console.log(err));
         reset()
     }
-    setValue("id", `P-${id + 1}`);
-    setValue("id_no", id + 1);
+    console.log(id)
     return (
         <div className='flex h-screen justify-center items-center '>
             <div className="card w-96 bg-base-100 shadow-xl">

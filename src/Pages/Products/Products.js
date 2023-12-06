@@ -4,11 +4,12 @@ import axios from 'axios';
 import Loading from '../Shared/Loading';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
-import useUserType from '../../Hooks/useUserType';
+import useGetUserByEmail from '../../Hooks/useGetUserByEmail';
 
 const Products = () => {
     const [user, loading] = useAuthState(auth);
-    const [userType, loadingType] = useUserType(user);
+    const [userInfo] = useGetUserByEmail(user?.email);
+    const userType = userInfo[0]?.role;
     const [products, setProducts] = useState([]);
     useEffect(() => {
         axios.get('http://localhost:8081/products')
@@ -16,9 +17,9 @@ const Products = () => {
             .catch(err => console.log(err));
     }, []);
 
-    if (!products || loading || loadingType || !user || !userType) {
-        return <Loading></Loading>
-    }
+    // if (!products || loading || !userType) {
+    //     return <Loading></Loading>
+    // }
     return (
         <div className='flex flex-col justify-center  item-center'>
             <div className='flex justify-center items-center px-20 w-screen'>

@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import Loading from '../Shared/Loading';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import useIdGenerator from '../../Hooks/useIdGenerator';
 const SignUp = () => {
+    const [id, setId] = useState([]);
+    useEffect(() => {
+        axios.get('http://localhost:8081/idProducer')
+            .then(res => setId(res.data[1].no_of_items))
+            .catch(err => console.log(err));
+    }, []);
     const [
         createUserWithEmailAndPassword,
         user,
@@ -16,10 +21,9 @@ const SignUp = () => {
     const navigate = useNavigate();
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
     const { register, formState: { errors }, handleSubmit, setValue } = useForm();
-    const [id] = useIdGenerator()
-    if (!id) {
-        return <Loading></Loading>
-    }
+    // if (!id) {
+    //     return <Loading></Loading>
+    // }
     if (user) {
         navigate("/products");
     }
@@ -27,21 +31,24 @@ const SignUp = () => {
     if (error || updateError) {
         signInError = <p className='text-red-500'><small>{error?.message || updateError?.message}</small></p>
     }
-    if (loading || updating) {
-        return <Loading></Loading>
-    }
+    // if (loading || updating) {
+    //     return <Loading></Loading>
+    // }
 
-    setValue("id", `user-${id + 1}`);
-    setValue("id_no", id + 1);
+    console.log(id);
     const onSubmit = async data => {
-
+        // setValue("id", `user-${id + 1}`);
+        // setValue("id_no", id + 1);
+        const user_id = "user-" + id
+        const id_no = id + 1
+        const userInfo = { address: data.address, email: data.email, name: data.name, password: data.password, phone: data.phone, role: data.role, id: user_id }
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
         console.log(data)
-        axios.post("http://localhost:8081/users", data)
+        axios.post("http://localhost:8081/users", userInfo)
             .then(res => console.log(res))
             .catch(err => console.log(err))
-        axios.put('http://localhost:8081/idProducer/user', data)
+        axios.put('http://localhost:8081/idProducer/user', { id_no: id_no })
             .then(res => {
                 console.log(res)
             }).catch(err => console.log(err));
