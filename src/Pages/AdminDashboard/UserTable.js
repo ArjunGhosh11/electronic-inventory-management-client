@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
+import Loading from '../Shared/Loading';
 const UserTable = () => {
     let l = 1
     const [users, setUsers] = useState([]);
@@ -22,6 +22,9 @@ const UserTable = () => {
                     console.log(res.data)
                 }
             }).catch(err => console.log(err));
+    }
+    if (!users) {
+        return <Loading></Loading>
     }
     return (
         <div className='m-5'>
